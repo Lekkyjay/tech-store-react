@@ -1,4 +1,5 @@
 import { createContext, useState } from "react"
+import { linkData } from "./linkData"
 
 export const ProductContext = createContext()
 
@@ -6,9 +7,10 @@ export const ProductContextProvider = ({ children }) => {
   const [data, setData] = useState({
     sidebarOpen: false,
     cartOpen: false,
-    cartItems: 0
+    cartItems: 50,
+    links: linkData
   })
-
+  
   //handle sidebar
   const handleSidebar = () => {
     setData({...data, sidebarOpen: !data.sidebarOpen})
