@@ -1,5 +1,6 @@
 import { createContext, useState } from "react"
 import { linkData } from "./linkData"
+import { socialData } from "./socialData"
 
 export const ProductContext = createContext()
 
@@ -9,6 +10,7 @@ export const ProductContextProvider = ({ children }) => {
     cartOpen: false,
     cartItems: 50,
     cart: [],
+    socialIcons: socialData,
     links: linkData
   })
   
