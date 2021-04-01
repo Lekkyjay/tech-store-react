@@ -1,15 +1,14 @@
-import React, { useContext } from 'react'
-import { ProductContext } from '../context/context'
+import React from 'react'
+import { Link } from 'react-router-dom'
+import Hero from '../components/Hero'
 
 const Home = () => {
-  const str = useContext(ProductContext)
-
-  console.log(str)
-  
   return (
-    <div>
-      <h1>Home Page</h1>
-    </div>
+    <Hero title="awesome gadgets" max="true">
+      <Link to="/products" className="main-link" style={{ margin: "2rem" }}>
+        our products
+      </Link>
+    </Hero>
   )
 }
 
