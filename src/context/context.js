@@ -8,6 +8,7 @@ export const ProductContextProvider = ({ children }) => {
     sidebarOpen: false,
     cartOpen: false,
     cartItems: 50,
+    cart: [],
     links: linkData
   })
   
