@@ -9,7 +9,7 @@ const SideCart = () => {
   return (
     <CartWrapper show={cartOpen} onClick={closeCart}>
       <ul>
-        {cart.map(item => {
+        {cart && cart.map(item => {
           return (
             <li key={item.id} className="cart-item mb-4">
               <img
