@@ -1,11 +1,15 @@
 import React from 'react'
+import Hero from '../components/Hero'
+import Products from '../components/Products'
+import productsBcg from '../images/productsBcg.jpeg'
 
-const Products = () => {
+const ProductsPage = () => {
   return (
     <div>
-      <h1>Product Page</h1>
+      <Hero img={productsBcg} />
+      <Products />
     </div>
   )
 }
 
-export default Products
+export default ProductsPage
