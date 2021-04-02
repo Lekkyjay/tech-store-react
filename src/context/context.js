@@ -12,7 +12,7 @@ export const ProductContextProvider = ({ children }) => {
     links: linkData,
     cartOpen: false,
     cart: [],
-    cartItems: 50,
+    cartItems: 0,
     cartSubTotal: 0,
     cartTax: 0,
     cartTotal: 0,
@@ -21,14 +21,21 @@ export const ProductContextProvider = ({ children }) => {
     featuredProducts: [],
     singleProduct: {},
     loading: false,
+    // search: "",
+    price: 0,
+    // min: 0,
+    max: 0,
+    // company: "all",
+    // shipping: false
   })
 
   useEffect(() => {
     setProducts(items)
   }, [])
 
-  //transforms the API data into a more friendly array of objects
+  
   const setProducts = products => {
+    //transforms the API data into a more friendly array of objects
     let storeProducts = products.map(item => {
       const { id } = item.sys;
       const image = item.fields.image.fields.file.url;
@@ -39,13 +46,24 @@ export const ProductContextProvider = ({ children }) => {
     //  featured products
     let featuredProducts = storeProducts.filter(item => item.featured === true)
 
+    // get max price
+    let maxPrice = Math.max(...storeProducts.map(item => item.price));
+
+    // const totals = getTotals()
+
     setData({
       ...data, 
       storeProducts, 
       filteredProducts: storeProducts, 
       featuredProducts,
-      singleProduct: getStorageProduct,
-      loading: false
+      loading: false,
+      price: maxPrice,
+      max: maxPrice,
+      // singleProduct: getStorageProduct,
+      // cartItems: totals.cartItems,
+      // cartSubTotal: totals.subTotal,
+      // cartTax: totals.tax,
+      // cartTotal: totals.total
     })
   }
 
@@ -59,7 +77,49 @@ export const ProductContextProvider = ({ children }) => {
     return {}
   }
 
-  const getTotals = () => {}
+  // const getTotals = () => {
+  //   return new Promise((resolve, reject) => {
+  //     let subTotal = 0;
+  //     let cartItems = 0;
+  //     data.cart.forEach(item => {
+  //       subTotal += item.total;
+  //       cartItems += item.count;
+  //     });
+
+  //     subTotal = parseFloat(subTotal.toFixed(2));
+  //     let tax = subTotal * 0.2;
+  //     tax = parseFloat(tax.toFixed(2));
+  //     let total = subTotal + tax;
+  //     total = parseFloat(total.toFixed(2));
+  //     resolve({
+  //       cartItems,
+  //       subTotal,
+  //       tax,
+  //       total
+  //     })
+  //   })    
+  // }
+
+  // const getTotals = () => {
+  //   let subTotal = 0;
+  //   let cartItems = 0;
+  //   data.cart.forEach(item => {
+  //     subTotal += item.total;
+  //     cartItems += item.count;
+  //   });
+
+  //   subTotal = parseFloat(subTotal.toFixed(2));
+  //   let tax = subTotal * 0.2;
+  //   tax = parseFloat(tax.toFixed(2));
+  //   let total = subTotal + tax;
+  //   total = parseFloat(total.toFixed(2));
+  //   return {
+  //     cartItems,
+  //     subTotal,
+  //     tax,
+  //     total
+  //   };
+  // }
 
   const addTotals = () => {}
   
@@ -68,6 +128,7 @@ export const ProductContextProvider = ({ children }) => {
 
   //add to cart
   const addToCart = id => {
+    console.log(data.cartItems)
     let tempCart = [...data.cart]
     let tempProducts = [...data.storeProducts]
     //check if item is already in the cart and returns the item
@@ -83,7 +144,18 @@ export const ProductContextProvider = ({ children }) => {
       tempItem.total = parseFloat(tempItem.total.toFixed(2));
     }
 
-    setData({...data, cart: tempCart, cartOpen: true})
+    // const totals = await getTotals()
+
+    setData({
+      ...data, 
+      cart: tempCart, 
+      cartOpen: true, 
+      cartItems: data.cartItems + 1,
+      // cartItems: totals.cartItems,
+      // cartSubTotal: totals.subTotal,
+      // cartTax: totals.tax,
+      // cartTotal: totals.total
+    })
 
     // this.setState(
     //   () => {
