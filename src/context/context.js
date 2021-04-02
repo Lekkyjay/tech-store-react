@@ -27,6 +27,7 @@ export const ProductContextProvider = ({ children }) => {
     setProducts(items)
   }, [])
 
+  //transforms the API data into a more friendly array of objects
   const setProducts = products => {
     let storeProducts = products.map(item => {
       const { id } = item.sys;
@@ -67,8 +68,40 @@ export const ProductContextProvider = ({ children }) => {
 
   //add to cart
   const addToCart = id => {
-    console.log('add to cart:', id)
+    let tempCart = [...data.cart]
+    let tempProducts = [...data.storeProducts]
+    //check if item is already in the cart and returns the item
+    let tempItem = tempCart.find(item => item.id === id)
+    if (!tempItem) {
+      tempItem = tempProducts.find(item => item.id === id)
+      let total = tempItem.price
+      let cartItem = { ...tempItem, count: 1, total }
+      tempCart = [...tempCart, cartItem]
+    } else {
+      tempItem.count++;
+      tempItem.total = tempItem.price * tempItem.count;
+      tempItem.total = parseFloat(tempItem.total.toFixed(2));
+    }
+
+    setData({...data, cart: tempCart, cartOpen: true})
+
+    // this.setState(
+    //   () => {
+    //     return { cart: tempCart };
+    //   },
+    //   () => {
+    //     this.addTotals();
+    //     this.syncStorage();
+    //     this.openCart();
+    //   }
+    // );
   }
+
+  // useEffect(() => {
+  //   addTotals()
+  //   syncStorage()
+  //   // openCart()     //this will cause infinite loop
+  // }, [data])
 
   // set single product
   const setSingleProduct = id => {
