@@ -149,11 +149,11 @@ export const ProductContextProvider = ({ children }) => {
   }
 
 // get product from local storage
-  const getStorageProduct = () => {
-    return localStorage.getItem("singleProduct")
-      ? JSON.parse(localStorage.getItem("singleProduct"))
-      : {};
-  }
+  // const getStorageProduct = () => {
+  //   return localStorage.getItem("singleProduct")
+  //     ? JSON.parse(localStorage.getItem("singleProduct"))
+  //     : {};
+  // }
 
 //set single product
   const setSingleProduct = id => {
@@ -187,7 +187,57 @@ export const ProductContextProvider = ({ children }) => {
     setData({...data, cartOpen: false})
   }  
 
-  const value = {...data,handleSidebar,handleCart,openCart,closeCart,addToCart,setSingleProduct}
+
+/***************  cart functionality   *********************/
+// increment
+  const increment = id => {
+    console.log(id)
+    // let tempCart = [...this.state.cart];
+    // const cartItem = tempCart.find(item => item.id === id);
+    // cartItem.count++;
+    // cartItem.total = cartItem.count * cartItem.price;
+    // cartItem.total = parseFloat(cartItem.total.toFixed(2));
+    // this.setState(
+    //   () => {
+    //     return {
+    //       cart: [...tempCart]
+    //     };
+    //   },
+    //   () => {
+    //     this.addTotals();
+    //     this.syncStorage();
+    //   }
+    // );
+  };
+
+//decrement
+  const decrement = id => {
+    console.log(id)
+  }
+
+//remove
+  const removeItem = id => {
+    console.log(id)
+  }
+
+//clear cart
+  const clearCart = id => {
+    console.log('Cart cleared!')
+  }
+
+  const value = {
+    ...data,
+    handleSidebar,
+    handleCart,
+    openCart,
+    closeCart,
+    addToCart,
+    setSingleProduct,
+    increment,
+    decrement,
+    removeItem,
+    clearCart
+  }
 
   return (
     <ProductContext.Provider value={value}>
