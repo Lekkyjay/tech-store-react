@@ -72,22 +72,21 @@ export const ProductContextProvider = ({ children }) => {
       price: maxPrice,
       max: maxPrice,
     })
+    console.log('setProducts ran:', data)
   }
 
   const addToCart = id => {
     let tempCart = [...data.cart]
     let tempProducts = [...data.storeProducts]
-    //check if item is already in the cart and returns the item
-    let tempItem = tempCart.find(item => item.id === id)
+    //checks if product is already in cart and returns the product if yes
+    let tempItem = tempCart.find(item => item.id === id)    //tempItem === tempProduct
     if (!tempItem) {
       tempItem = tempProducts.find(item => item.id === id)
       let total = tempItem.price
-      let cartItem = { ...tempItem, count: 1, total }
+      let cartItem = { ...tempItem, count: 1, total } //adds two new props to product: count,total
       tempCart = [...tempCart, cartItem]
     } else {
-      //note: tempItem points to an object found in tempCart
-      //any modification to tempItem, equally modifies that same object inside tempCart
-      //modified tempCart is then stored into state
+      //tempItem is a product already in cart
       tempItem.count++;
       tempItem.total = tempItem.price * tempItem.count;
       tempItem.total = parseFloat(tempItem.total.toFixed(2));
@@ -128,11 +127,13 @@ export const ProductContextProvider = ({ children }) => {
       cartTotal: totals.total
     })
   }
+ 
 
 //this runs 1x and at everytime cart changes
+//its basically a cb to addToCart function
   useEffect(() => {
-    setTotals()
-    syncStorage()
+    setTotals()   //sets state
+    syncStorage() //stores state in localStorage
   }, [data.cart])
 
 
