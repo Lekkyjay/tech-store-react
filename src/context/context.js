@@ -201,12 +201,23 @@ export const ProductContextProvider = ({ children }) => {
 
 //decrement
   const decrement = id => {
-    console.log(id)
+    let tempCart = [...data.cart]
+    const cartItem = tempCart.find(item => item.id === id)
+    cartItem.count = cartItem.count - 1
+    if (cartItem.count === 0) {
+      removeItem(id);
+    } else {
+      cartItem.total = cartItem.count * cartItem.price;
+      cartItem.total = parseFloat(cartItem.total.toFixed(2));
+      setData({ ...data, cart: [...tempCart] })
+    }
   }
 
 //remove
   const removeItem = id => {
-    console.log(id)
+    let tempCart = [...data.cart]
+    tempCart = tempCart.filter(item => item.id !== id);
+    setData({ ...data, cart: [...tempCart] })
   }
 
 //clear cart
