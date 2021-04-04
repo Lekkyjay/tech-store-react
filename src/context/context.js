@@ -5,18 +5,7 @@ import { items } from "./productData"
 
 export const ProductContext = createContext()
 
-export const ProductContextProvider = ({ children }) => {
-
-  //get cart from local storage
-  const getStorageCart = () => {
-    let cart
-    if (localStorage.getItem("cart")) {
-      cart = JSON.parse(localStorage.getItem("cart"));
-    } else {
-      cart = []
-    }
-    return cart
-  }
+export const ProductContextProvider = ({ children }) => {  
 
   //initial State
   const [data, setData] = useState({
@@ -24,7 +13,7 @@ export const ProductContextProvider = ({ children }) => {
     socialIcons: socialData,
     links: linkData,
     cartOpen: false,
-    cart: getStorageCart(),
+    cart: [],
     cartItems: 0,
     cartSubTotal: 0,
     cartTax: 0,
@@ -42,25 +31,30 @@ export const ProductContextProvider = ({ children }) => {
     shipping: false
   })
 
+  //updates initial state with imported data items, and some computed values
+  useEffect(() => {
+    setProducts(items)
+  }, [])
+
 
   const setProducts = products => {
-    //transforms the API data into a more friendly array of objects
+    //transforms imported API data into a more friendly array of objects
     let storeProducts = products.map(item => {
-      const { id } = item.sys;
-      const image = item.fields.image.fields.file.url;
-      const product = { id, ...item.fields, image };
-      return product;
+      const { id } = item.sys
+      const image = item.fields.image.fields.file.url
+      const product = { id, ...item.fields, image }
+      return product
     })
     
     //  featured products
     let featuredProducts = storeProducts.filter(item => item.featured === true)
     
     // get max price
-    let maxPrice = Math.max(...storeProducts.map(item => item.price));
+    let maxPrice = Math.max(...storeProducts.map(item => item.price))
     
     // let storageCart = getStorageCart()
     
-    setData({
+    setData(data => ({
       ...data, 
       storeProducts, 
       filteredProducts: storeProducts, 
@@ -69,8 +63,18 @@ export const ProductContextProvider = ({ children }) => {
       loading: false,
       price: maxPrice,
       max: maxPrice
-    })
-    console.log('setProducts ran:', data)
+    }))
+  }
+
+  //get cart from local storage
+  const getStorageCart = () => {
+    let cart
+    if (localStorage.getItem("cart")) {
+      cart = JSON.parse(localStorage.getItem("cart"));
+    } else {
+      cart = []
+    }
+    return cart
   }
 
   const addToCart = id => {
@@ -89,7 +93,7 @@ export const ProductContextProvider = ({ children }) => {
       tempItem.total = tempItem.price * tempItem.count;
       tempItem.total = parseFloat(tempItem.total.toFixed(2));
     }
-    setData({ ...data, cart: tempCart, cartOpen: true })
+    setData(data => ({ ...data, cart: tempCart, cartOpen: true }))
   }
 
 
@@ -117,30 +121,24 @@ export const ProductContextProvider = ({ children }) => {
 //used cart to calculate totals. see above!
   const setTotals = () => {
     const totals = getTotals()
-    setData({
+    setData(data => ({
       ...data,
       cartItems: totals.cartItems,
       cartSubTotal: totals.subTotal,
       cartTax: totals.tax,
       cartTotal: totals.total
-    })
+    }))
   }
- 
 
-//this runs 1x and at everytime cart changes
-//its basically a cb to addToCart function
+
+//cb to addToCart function
   useEffect(() => {
-    setTotals()   //sets state
-    syncStorage() //stores state in localStorage
+    setTotals()  
+    syncStorage()
   }, [data.cart])
 
-//this useEffect must be called last to setup initial state of app with localStorage.
-  useEffect(() => {
-    setProducts(items)
-  }, [])
 
-
-//save cart to local storage
+//saves cart to local storage
   const syncStorage = () => {
     localStorage.setItem("cart", JSON.stringify(data.cart))
   }
@@ -222,6 +220,48 @@ export const ProductContextProvider = ({ children }) => {
     setData({ ...data, cart: [] })
   }
 
+//handle filtering
+  const handleChange = event => {
+    const name = event.target.name
+    const value = event.target.type === "checkbox"
+        ? event.target.checked
+        : event.target.value;
+    setData({...data, [name]: value}) //the [name] key is computed so it needs to be in bracket.
+  }
+
+
+  useEffect(() => {
+    sortData()
+  }, [data.company, data.price, data.search, data.shipping])
+
+
+  const sortData = () => {
+    const { storeProducts, price, company, shipping, search } = data
+
+    let tempPrice = parseInt(price) //converts price from string to integer
+
+    let tempProducts = [...storeProducts];
+    // filtering based on price
+    tempProducts = tempProducts.filter(item => item.price <= tempPrice)
+    // filtering based on company
+    if (company !== "all") {
+      tempProducts = tempProducts.filter(item => item.company === company)
+    }
+    if (shipping) {
+      tempProducts = tempProducts.filter(item => item.freeShipping === true)
+    }
+    if (search.length > 0) {
+      tempProducts = tempProducts.filter(item => {
+        let tempSearch = search.toLowerCase();
+        let tempTitle = item.title.toLowerCase().slice(0, search.length)
+        if (tempSearch === tempTitle) {
+          return item;
+        }
+      })
+    }
+    setData(data => ({...data, filteredProducts: tempProducts}))
+  }
+
   const value = {
     ...data,
     handleSidebar,
@@ -233,7 +273,8 @@ export const ProductContextProvider = ({ children }) => {
     increment,
     decrement,
     removeItem,
-    clearCart
+    clearCart,
+    handleChange
   }
 
   return (
