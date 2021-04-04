@@ -2,6 +2,7 @@ import React from 'react'
 import { FaChevronCircleDown, FaChevronCircleUp, FaTrash } from 'react-icons/fa'
 
 const CartItem = ({cartItem, increment, decrement, removeItem }) => {
+  
   const { id, title, price, count, total, image } = cartItem
 
   return (

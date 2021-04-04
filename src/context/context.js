@@ -191,24 +191,13 @@ export const ProductContextProvider = ({ children }) => {
 /***************  cart functionality   *********************/
 // increment
   const increment = id => {
-    console.log(id)
-    // let tempCart = [...this.state.cart];
-    // const cartItem = tempCart.find(item => item.id === id);
-    // cartItem.count++;
-    // cartItem.total = cartItem.count * cartItem.price;
-    // cartItem.total = parseFloat(cartItem.total.toFixed(2));
-    // this.setState(
-    //   () => {
-    //     return {
-    //       cart: [...tempCart]
-    //     };
-    //   },
-    //   () => {
-    //     this.addTotals();
-    //     this.syncStorage();
-    //   }
-    // );
-  };
+    let tempCart = [...data.cart]
+    const cartItem = tempCart.find(item => item.id === id);
+    cartItem.count++;
+    cartItem.total = cartItem.count * cartItem.price;
+    cartItem.total = parseFloat(cartItem.total.toFixed(2));
+    setData({ ...data, cart: [...tempCart] })
+  }
 
 //decrement
   const decrement = id => {
