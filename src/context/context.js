@@ -233,7 +233,7 @@ export const ProductContextProvider = ({ children }) => {
     increment,
     decrement,
     removeItem,
-    clearCart,
+    clearCart
   }
 
   return (

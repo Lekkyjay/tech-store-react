@@ -2,6 +2,7 @@ import React, { useContext } from 'react'
 import { ProductContext } from '../../context/context';
 import Product from '../Product';
 import Title from '../Title';
+import ProductsFilter from './ProductsFilter';
 
 const Products = () => {
   const { filteredProducts } = useContext(ProductContext)
@@ -9,11 +10,8 @@ const Products = () => {
   return (
     <section className="py-5">
       <div className="container">
-        {/* title */}
         <Title center title="our products" />
-        {/* Product filter */}
-        
-        {/* total count */}
+        <ProductsFilter />
         <div className="row">
           <div className="col-10 mx-auto">
             <h6 className="text-title">
@@ -21,17 +19,19 @@ const Products = () => {
             </h6>
           </div>
         </div>
-        {/* products */}
         <div className="row py-5">
-          {filteredProducts.length === 0 ? (
-            <div className="col text-title text-center">
-              sorry, no items matched your search
-            </div>
-          ) : (
-            filteredProducts.map(product => {
-              return <Product key={product.id} product={product} />;
-            })
-          )}
+          {filteredProducts.length === 0 
+          ? (
+              <div className="col text-title text-center">
+                sorry, no items matched your search
+              </div>
+            ) 
+          : (
+              filteredProducts.map(product => {
+                return <Product key={product.id} product={product} />;
+              })
+            )
+          }
         </div>
       </div>
     </section>
