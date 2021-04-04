@@ -12,7 +12,6 @@ export const ProductContextProvider = ({ children }) => {
     let cart
     if (localStorage.getItem("cart")) {
       cart = JSON.parse(localStorage.getItem("cart"));
-      console.log('cart:', cart)
     } else {
       cart = []
     }
@@ -35,13 +34,12 @@ export const ProductContextProvider = ({ children }) => {
     featuredProducts: [],
     singleProduct: {},
     loading: false,
-    // search: "",
+    search: "",
     price: 0,
-    // min: 0,
+    min: 0,
     max: 0,
-    // company: "all",
-    // shipping: false
-    myflag: true
+    company: "all",
+    shipping: false
   })
 
 
@@ -70,7 +68,7 @@ export const ProductContextProvider = ({ children }) => {
       cart: getStorageCart(),
       loading: false,
       price: maxPrice,
-      max: maxPrice,
+      max: maxPrice
     })
     console.log('setProducts ran:', data)
   }
@@ -136,7 +134,7 @@ export const ProductContextProvider = ({ children }) => {
     syncStorage() //stores state in localStorage
   }, [data.cart])
 
-
+//this useEffect must be called last to setup initial state of app with localStorage.
   useEffect(() => {
     setProducts(items)
   }, [])
@@ -145,7 +143,6 @@ export const ProductContextProvider = ({ children }) => {
 //save cart to local storage
   const syncStorage = () => {
     localStorage.setItem("cart", JSON.stringify(data.cart))
-    console.log('syncstorage')
   }
 
 // get product from local storage
@@ -236,7 +233,7 @@ export const ProductContextProvider = ({ children }) => {
     increment,
     decrement,
     removeItem,
-    clearCart
+    clearCart,
   }
 
   return (
