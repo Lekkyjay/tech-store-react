@@ -221,8 +221,8 @@ export const ProductContextProvider = ({ children }) => {
   }
 
 //clear cart
-  const clearCart = id => {
-    console.log('Cart cleared!')
+  const clearCart = () => {
+    setData({ ...data, cart: [] })
   }
 
   const value = {
