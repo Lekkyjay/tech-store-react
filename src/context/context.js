@@ -1,7 +1,8 @@
 import { createContext, useEffect, useState } from "react"
 import { linkData } from "./linkData"
 import { socialData } from "./socialData"
-import { items } from "./productData"
+// import { items } from "./productData"
+import { client } from "./contentful"
 
 export const ProductContext = createContext()
 
@@ -33,7 +34,15 @@ export const ProductContextProvider = ({ children }) => {
 
   //updates initial state with imported data items, and some computed values
   useEffect(() => {
-    setProducts(items)
+    // setProducts(items)
+    
+    //get items from contentful
+    client
+      .getEntries({
+        content_type: "techStoreProducts"
+      })
+      .then(response => setProducts(response.items))
+      .catch(console.error)
   }, [])
 
 
