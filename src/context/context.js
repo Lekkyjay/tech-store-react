@@ -8,6 +8,13 @@ export const ProductContext = createContext()
 
 export const ProductContextProvider = ({ children }) => {  
 
+  // Initializing didMount as false
+  const [didMount, setDidMount] = useState(false)
+
+  // Setting didMount to true upon mounting
+  useEffect(() => { setDidMount(true) }, [])
+
+
   //initial State
   const [data, setData] = useState({
     sidebarOpen: false,
@@ -143,7 +150,10 @@ export const ProductContextProvider = ({ children }) => {
 //cb to addToCart function
   useEffect(() => {
     setTotals()  
-    syncStorage()
+    
+    if (didMount) {      
+      syncStorage()
+    }    
   }, [data.cart])
 
 
