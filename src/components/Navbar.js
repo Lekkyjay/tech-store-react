@@ -11,7 +11,7 @@ const Navbar = () => {
     <NavWrapper>
       <div className="nav-center">
         <FaBars className="nav-icon" onClick={handleSidebar} />
-        <img src={logo} alt="tech store logo" />
+        <h1 style={{margin: 0, padding: 0}}>Gadget Store</h1>
         <div className="nav-cart">
           <FaCartPlus className="nav-icon" onClick={handleCart} />
           <div className="cart-items">{cartItems}</div>
